@@ -256,6 +256,7 @@
       <a href="#paired">Output quality</a>
       <a href="#cost">Credits</a>
       <a href="#time">Model time</a>
+      <a href="#app-checks">App checks</a>
       <a href="#checks">Code checks</a>
       <a href="#table">Table</a>
     </nav>
@@ -312,6 +313,17 @@
     </div>
   </section>
 
+  <section id="app-checks">
+    <h2>App-quality checks</h2>
+    <div class="key" id="app-key"></div>
+    <div class="legend">
+      <span><i class="swatch" style="background:#E4F0EA;border-radius:3px"></i> yes</span>
+      <span><i class="swatch" style="background:#F6E4E1;border-radius:3px"></i> no</span>
+    </div>
+    <div class="card scroll" id="app-heat"></div>
+    <p class="note">Read from the one-shot programs. A model is omitted when those ten behaviors do not add up to its published score. Hover a cell for the reading.</p>
+  </section>
+
   <section id="checks">
     <h2>Code-quality checks</h2>
     <div class="key" id="check-key"></div>
@@ -348,7 +360,7 @@
 
   <footer>
     <p>Scores, costs, and times are copied from the one-shot table in <code>ex-nihilo/tui/README.md</code>.</p>
-    <p>Code-quality checks are read from <code>ex-nihilo/tui/one-shot/README.md</code>. Grok model's credit costs are unknown due to using the xAI interface.</p>
+    <p>Code-quality checks are read from <code>ex-nihilo/tui/one-shot/README.md</code>. App-quality checks are read from the one-shot programs. Grok model's credit costs are unknown due to using the xAI interface.</p>
   </footer>
 </div>
 <div class="tip" id="tip" hidden></div>
@@ -362,38 +374,50 @@
   {"name":"Claude Haiku 4.5","vendor":"Anthropic","cost":12,"app":5,"code":9.5,"passive":12,"passiveLabel":"12s","active":2220,"activeLabel":"~37m","checks":"PPPFFPFFPFFH","mark":true,"why":{"compile":"New-database creation crashes until createInput is a strings.Builder and NewInitialModel initializes it. The notes describe a crash and two required edits, not a compiler log."}},
   {"name":"Claude Opus 4.8","vendor":"Anthropic","cost":66,"app":8,"code":14,"passive":37,"passiveLabel":"37s","active":2100,"activeLabel":"35m","checks":"PPPPFPPHPFFP","why":{"struct":"Snapshot and Row exist. Row stores each column as a string."}},
   {"name":"Claude Fable 5.1","vendor":"Anthropic","cost":182,"app":9,"code":15.5,"passive":67,"passiveLabel":"1m 7s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true},
-  {"name":"Claude Haiku 5.5","vendor":"Anthropic","cost":3,"app":9,"code":16,"passive":45,"passiveLabel":"45s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true},
+  {"name":"Claude Haiku 5.5","vendor":"Anthropic","cost":3,"app":9,"code":16,"passive":45,"passiveLabel":"45s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true,"appChecks":"PPPPPPPPPF","why":{"style":"The screens are plain strings. Lipgloss is never called."}},
   {"name":"Claude Sonnet 5.5","vendor":"Anthropic","cost":39,"app":9,"code":15,"passive":43,"passiveLabel":"43s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","why":{"struct":"Snapshot exists, and it holds records as rendered strings."}},
-  {"name":"Claude Opus 5.5","vendor":"Anthropic","cost":106,"app":10,"code":16,"passive":81,"passiveLabel":"1m 21s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true,"why":{"seed":"The seed generator is generic. Every database still gets the same rows, which is the cons line."}},
+  {"name":"Claude Opus 5.5","vendor":"Anthropic","cost":106,"app":10,"code":16,"passive":81,"passiveLabel":"1m 21s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true,"appChecks":"PPPPPPPPPP","why":{"seed":"The seed generator is generic. Every database still gets the same rows, which is the cons line."}},
   {"name":"DeepSeek V4 Pro","vendor":"DeepSeek","cost":8,"app":9,"code":9.5,"passive":192,"passiveLabel":"3m 12s","active":2280,"activeLabel":"~38m","checks":"PPPPFPPFPFFF","mark":true,"why":{"compile":"Does not compile as emitted: unused filepath imports, missing textinput and lipgloss imports, CreateDB's schema argument, and loadCmd's database names."}},
   {"name":"DeepSeek V4.1 Flash","vendor":"DeepSeek","cost":6,"app":8,"code":14.5,"passive":108,"passiveLabel":"1m 48s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","ext":"The constant is for .sqlite, not .db. The notes count that constant as a pro."}},
-  {"name":"Gemini 3.1 Pro","vendor":"Google","cost":18,"app":8,"code":12.5,"passive":34,"passiveLabel":"34s","active":2100,"activeLabel":"35m","checks":"PPPFFHFPFFFP","why":{"dbdir":"Directory creation is split across the Makefile, main.go, and db.go.","builder":"Rendering does not use strings.Builder."}},
-  {"name":"Gemini 3.8 Flash","vendor":"Google","cost":9,"app":10,"code":15,"passive":25,"passiveLabel":"25s","active":2100,"activeLabel":"35m","checks":"PPPPFPFPPFFP","mark":true,"why":{"valid":"Does not reuse one regexp for name checks."}},
+  {"name":"Gemini 3.1 Pro","vendor":"Google","cost":18,"app":8,"code":12.5,"passive":34,"passiveLabel":"34s","active":2100,"activeLabel":"35m","checks":"PPPFFHFPFFFP","appChecks":"PPPPPPFPPF","why":{"dbdir":"Directory creation is split across the Makefile, main.go, and db.go.","builder":"Rendering does not use strings.Builder.","align":"Rows are printed with tabs and no column widths.","style":"The screens are plain strings. Lipgloss is never called."}},
+  {"name":"Gemini 3.8 Flash","vendor":"Google","cost":9,"app":10,"code":15,"passive":25,"passiveLabel":"25s","active":2100,"activeLabel":"35m","checks":"PPPPFPFPPFFP","mark":true,"appChecks":"PPPPPPPPPP","why":{"valid":"Does not reuse one regexp for name checks."}},
   {"name":"Gemini 4 Argon","vendor":"Google","cost":20,"app":9,"code":15.5,"passive":44,"passiveLabel":"44s","active":2100,"activeLabel":"35m","checks":"PPPPFPPPPFFP"},
   {"name":"Muse Spark 1.2","vendor":"Meta","cost":8,"app":4,"code":12,"passive":18,"passiveLabel":"18s","active":2100,"activeLabel":"35m","checks":"PPPFFPPHPFFP","mark":true,"why":{"schema":"Schema stays on disk. schema.sql contains NOT NOT NULL, so a new database fails to initialize.","ext":"Accepts more than one extension, and does not keep one in a constant.","struct":"Stats exists, and it holds record values as rendered strings."}},
-  {"name":"Muse Wonder","vendor":"Meta","cost":38,"app":7,"code":16,"passive":17,"passiveLabel":"17s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","why":{"struct":"Rows are rendered straight to a string. There is no record struct."}},
+  {"name":"Muse Wonder","vendor":"Meta","cost":38,"app":7,"code":16,"passive":17,"passiveLabel":"17s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","appChecks":"PPPPPPFPFF","why":{"struct":"Rows are rendered straight to a string. There is no record struct.","align":"Each row is joined on a pipe, with no column widths.","swap":"q and esc on the loaded screen quit. The notes say a database cannot be unloaded.","style":"The screens are plain strings. Lipgloss is never called."}},
   {"name":"MiniMax M2.7","vendor":"MiniMax","cost":4,"app":6,"code":6.5,"passive":64,"passiveLabel":"1m 4s","active":3000,"activeLabel":"~50m","checks":"FPPHFPPPFFFF","mark":true,"why":{"sm":"Separate list and view models, plus a two-phase load-then-view in main.go.","schema":"schema.sql is unused. The schema is hardcoded in schema.go.","compile":"Does not compile until duplicated definitions are removed. The notes say that cleanup added no new code."}},
   {"name":"MiniMax M3","vendor":"MiniMax","cost":17,"app":7,"code":15.5,"passive":218,"passiveLabel":"3m 38s","active":2100,"activeLabel":"35m","checks":"PPPPFPPPPFFP","mark":true},
   {"name":"Kimi K2.6","vendor":"Moonshot","cost":22,"app":9,"code":14,"passive":314,"passiveLabel":"5m 14s","active":2100,"activeLabel":"35m","checks":"PPPPFPFPPFFP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","valid":"Does not reuse one regexp for name checks."}},
   {"name":"Kimi K3","vendor":"Moonshot","cost":20,"app":7,"code":16,"passive":49,"passiveLabel":"49s","active":2100,"activeLabel":"35m","checks":"PPPPFPPFPFFP","mark":true,"why":{"ext":"No extension constant. Files use .sqlite.","dbdir":"A directory constant in db.go is unused by main.go. The directory is still created at boot."}},
-  {"name":"Kimi K3.1 Pro","vendor":"Moonshot","cost":26,"app":7,"code":15,"passive":117,"passiveLabel":"1m 57s","active":2100,"activeLabel":"35m","checks":"PPPPFPPHPFFP","why":{"struct":"Snapshot exists, and it holds record values as rendered strings."}},
+  {"name":"Kimi K3.1 Pro","vendor":"Moonshot","cost":26,"app":7,"code":15,"passive":117,"passiveLabel":"1m 57s","active":2100,"activeLabel":"35m","checks":"PPPPFPPHPFFP","appChecks":"PPPPPPFPFF","why":{"struct":"Snapshot exists, and it holds record values as rendered strings.","align":"The viewer joins columns on a pipe, with no column widths.","swap":"q quits from the viewer, and no key returns to the list. The notes say a database cannot be unloaded.","style":"The screens are plain strings. Lipgloss is never called."}},
   {"name":"GPT 5.6 Terra","vendor":"OpenAI","cost":8,"app":9,"code":16,"passive":188,"passiveLabel":"3m 8s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","mark":true,"why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","struct":"Table exists, and it holds record values as rendered strings."}},
-  {"name":"GPT 5.6 Terra Pro","vendor":"OpenAI","cost":10,"app":10,"code":15.5,"passive":167,"passiveLabel":"2m 47s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","struct":"Summary exists, and it holds record values as rendered strings."}},
-  {"name":"GPT 5.6 Sol","vendor":"OpenAI","cost":22,"app":10,"code":16,"passive":133,"passiveLabel":"2m 13s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true,"why":{"schema":"Embedded, as embed.FS rather than a string or byte slice."}},
+  {"name":"GPT 5.6 Terra Pro","vendor":"OpenAI","cost":10,"app":10,"code":15.5,"passive":167,"passiveLabel":"2m 47s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","appChecks":"PPPPPPPPPP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","struct":"Summary exists, and it holds record values as rendered strings."}},
+  {"name":"GPT 5.6 Sol","vendor":"OpenAI","cost":22,"app":10,"code":16,"passive":133,"passiveLabel":"2m 13s","active":2100,"activeLabel":"35m","checks":"PPPPPPPFPFFP","mark":true,"appChecks":"PPPPPPPPPP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice."}},
   {"name":"GPT 5.6 Sol Pro","vendor":"OpenAI","cost":28,"app":9,"code":15.5,"passive":118,"passiveLabel":"1m 58s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","why":{"struct":"Snapshot exists, and it holds records as rendered strings."}},
-  {"name":"GPT 6 Luna","vendor":"OpenAI","cost":2,"app":7,"code":14.5,"passive":22,"passiveLabel":"22s","active":2100,"activeLabel":"35m","checks":"PHPPFPPFPFFP","mark":true,"why":{"dir":"The directory is fetched only at boot. The notes call that a bug because a database can be unloaded. The written rubric still awards the point when a run does not refetch on every redraw, so this cell is mixed.","schema":"Embedded, as embed.FS rather than a string or byte slice."}},
-  {"name":"GPT 6 Astra","vendor":"OpenAI","cost":85,"app":9,"code":15,"passive":45,"passiveLabel":"45s","active":2100,"activeLabel":"35m","checks":"PPPPFPPHPFFP","mark":true,"costNote":"85 credits in the summary table. The model notes say 82.","why":{"struct":"Snapshot exists, and it holds records as rendered strings."}},
-  {"name":"GPT 6.1 Terra","vendor":"OpenAI","cost":10,"app":8,"code":13.5,"passive":30,"passiveLabel":"30s","active":2100,"activeLabel":"35m","checks":"PPPFFPPHPFFP","why":{"schema":"The schema is not embedded into the code.","struct":"Snapshot exists, and it holds records as rendered strings."}},
+  {"name":"GPT 6 Luna","vendor":"OpenAI","cost":2,"app":7,"code":14.5,"passive":22,"passiveLabel":"22s","active":2100,"activeLabel":"35m","checks":"PHPPFPPFPFFP","mark":true,"appChecks":"PPFPPPFPPF","why":{"dir":"The directory is fetched only at boot. The notes call that a bug because a database can be unloaded. The written rubric still awards the point when a run does not refetch on every redraw, so this cell is mixed.","schema":"Embedded, as embed.FS rather than a string or byte slice.","type":"q quits from the name screen, so that letter cannot be entered.","align":"The viewer joins columns on a pipe, with no column widths.","style":"The screens are plain strings. Lipgloss is never called."}},
+  {"name":"GPT 6 Astra","vendor":"OpenAI","cost":85,"app":9,"code":15,"passive":45,"passiveLabel":"45s","active":2100,"activeLabel":"35m","checks":"PPPPFPPHPFFP","mark":true,"costNote":"85 credits in the summary table. The model notes say 82.","appChecks":"PPPPPPPPPF","why":{"struct":"Snapshot exists, and it holds records as rendered strings.","style":"Every screen is plain fmt and strings. Lipgloss is never called."}},
+  {"name":"GPT 6.1 Terra","vendor":"OpenAI","cost":10,"app":8,"code":13.5,"passive":30,"passiveLabel":"30s","active":2100,"activeLabel":"35m","checks":"PPPFFPPHPFFP","appChecks":"PPPPPPFPPF","why":{"schema":"The schema is not embedded into the code.","struct":"Snapshot exists, and it holds records as rendered strings.","align":"Each cell is quoted and joined on a pipe, with no column widths.","style":"The screens are plain strings. Lipgloss is never called."}},
   {"name":"GPT 6.1 Sol","vendor":"OpenAI","cost":17,"app":8,"code":14.5,"passive":42,"passiveLabel":"42s","active":2100,"activeLabel":"35m","checks":"PPPPPPPHPFFP","why":{"ext":"The constant is for .sqlite, not .db. The notes count that constant as a pro.","struct":"Preview exists, and it holds record values as rendered strings."}},
   {"name":"Grok 4.7 Fast","vendor":"xAI","cost":null,"app":8,"code":13,"passive":126,"passiveLabel":"2m 6s","active":2100,"activeLabel":"35m","checks":"PPPFFPPFFFFP","why":{"schema":"schema.sql is read from disk. It is not embedded.","builder":"Rendering does not use strings.Builder."}},
-  {"name":"Grok 4.7 Expert","vendor":"xAI","cost":null,"app":9,"code":14.5,"passive":205,"passiveLabel":"3m 25s","active":2100,"activeLabel":"35m","checks":"PPPPFPPPFFFP","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","builder":"Rendering does not use strings.Builder."}},
+  {"name":"Grok 4.7 Expert","vendor":"xAI","cost":null,"app":9,"code":14.5,"passive":205,"passiveLabel":"3m 25s","active":2100,"activeLabel":"35m","checks":"PPPPFPPPFFFP","appChecks":"PPPPPPPPPF","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","builder":"Rendering does not use strings.Builder.","style":"The screens are plain strings. Lipgloss is never called."}},
   {"name":"MiMo V2.6 Flash","vendor":"Xiaomi","cost":3,"app":9,"code":13,"passive":199,"passiveLabel":"3m 19s","active":2160,"activeLabel":"~36m","checks":"PPPPPPPFPFFF","why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","compile":"Two compile errors: Preview is both a type and a function, and main calls ui.New instead of passing it to tea.NewProgram."}},
   {"name":"MiMo V2.6 Pro","vendor":"Xiaomi","cost":9,"app":9,"code":13,"passive":478,"passiveLabel":"7m 58s","active":2160,"activeLabel":"~36m","checks":"PPPPPPPHPFFF","mark":true,"why":{"schema":"Embedded, as embed.FS rather than a string or byte slice.","struct":"Table exists, and it holds record values as rendered strings.","seed":"The seed generator is generic. Every database still gets the same rows, which is the cons line.","compile":"Three build failures: the pinned bubbletea version does not exist, viewer.go does not import lipgloss, and create.go imports textinput unused."}},
-  {"name":"GLM 5.3 Flash","vendor":"Z AI","cost":1,"app":8,"code":13,"passive":11,"passiveLabel":"11s","active":2100,"activeLabel":"35m","checks":"PPFFFPPPFFFP","mark":true,"why":{"rec":"Fetches records again on every redraw.","schema":"Schema is not embedded.","builder":"Rendering does not use strings.Builder."}}
+  {"name":"GLM 5.3 Flash","vendor":"Z AI","cost":1,"app":8,"code":13,"passive":11,"passiveLabel":"11s","active":2100,"activeLabel":"35m","checks":"PPFFFPPPFFFP","mark":true,"appChecks":"PPPPPPPPFF","why":{"rec":"Fetches records again on every redraw.","schema":"Schema is not embedded.","builder":"Rendering does not use strings.Builder.","swap":"The loaded screen only quits on q. The notes say a database cannot be unloaded.","style":"The screens are plain strings. Lipgloss is never called."}}
 ]
 </script>
 
 <script>
+const APP_CHECKS = [
+  ["pick", "Pick", "Lists databases", "The selection screen lists existing databases, including when the directory is empty."],
+  ["nav", "Nav", "Selection navigation", "Moving through the database list works."],
+  ["type", "Type", "Name keystrokes", "The naming screen takes keystrokes and shows a reason when the name is invalid."],
+  ["reject", "Reject", "Rejects invalid names", "Empty, duplicate, and non-alphanumeric names are all rejected."],
+  ["open", "Open", "Opens immediately", "A valid new name creates the database and opens it immediately."],
+  ["count", "Count", "Count and rows", "The viewer shows both the record count and the row data."],
+  ["align", "Align", "Aligned columns", "Rows line up in columns, with padding or a table."],
+  ["draw", "Draw", "Clean rendering", "The viewer has no broken runes and does not crash on view."],
+  ["swap", "Swap", "Switch database", "A key on the viewer returns to the list so another database can be opened."],
+  ["style", "Style", "Lipgloss", "Lipgloss is used to style the TUI."]
+];
 const CHECKS = [
   ["sm", "SM", "State machine", "Screens live in one model, not a graph of tea.Model values."],
   ["dir", "Dir", "Directory fetch", "The ./db/ listing is not reread on every redraw."],
@@ -815,7 +839,7 @@ function renderTime() {
 }
 
 function renderHeat(checks, field, keyId, hostId, rowPrefix) {
-  const rows = sorted(filtered());
+  const rows = sorted(filtered()).filter(m => (m[field] || "").length === checks.length);
   const table = document.createElement("table");
   table.className = "heat";
   const thead = document.createElement("thead");
@@ -914,6 +938,7 @@ function render() {
   renderScatter();
   renderValue();
   renderTime();
+  renderHeat(APP_CHECKS, "appChecks", "app-key", "app-heat", "app-");
   renderHeat(CHECKS, "checks", "check-key", "heatmap", "m-");
   renderTable();
 }
