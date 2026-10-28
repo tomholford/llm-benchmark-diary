@@ -814,7 +814,7 @@ function renderTime() {
   document.getElementById("timechart").replaceChildren(svg);
 }
 
-function renderHeat() {
+function renderHeat(checks, field, keyId, hostId, rowPrefix) {
   const rows = sorted(filtered());
   const table = document.createElement("table");
   table.className = "heat";
@@ -823,7 +823,7 @@ function renderHeat() {
   const blank = document.createElement("th");
   blank.textContent = "";
   hr.appendChild(blank);
-  for (const [, short, full] of CHECKS) {
+  for (const [, short, full] of checks) {
     const th = document.createElement("th");
     th.textContent = short;
     th.title = full;
@@ -834,7 +834,7 @@ function renderHeat() {
   const tb = document.createElement("tbody");
   for (const m of rows) {
     const tr = document.createElement("tr");
-    tr.id = "m-" + slug(m.name);
+    tr.id = rowPrefix + slug(m.name);
     const who = document.createElement("td");
     who.className = "who";
     const sw = document.createElement("i");
@@ -843,14 +843,15 @@ function renderHeat() {
     sw.style.marginRight = "6px";
     who.append(sw, document.createTextNode(m.name));
     tr.appendChild(who);
-    CHECKS.forEach(([id, , full], i) => {
-      const ch = m.checks[i];
+    const cells = m[field] || "";
+    checks.forEach(([id, , full], i) => {
+      const ch = cells[i];
       const td = document.createElement("td");
       const div = document.createElement("div");
       div.className = "cell " + (ch === "?" ? "Q" : ch);
-      div.textContent = CELL[ch];
+      div.textContent = CELL[ch] || "";
       div.tabIndex = 0;
-      const extra = m.why[id];
+      const extra = m.why && m.why[id];
       hover(div, () => {
         const lines = [m.name + " — " + full, { k: "Read as", v: ch === "P" ? "yes" : ch === "F" ? "no" : ch === "H" ? "mixed" : "not mentioned" }];
         if (extra) lines.push(extra);
@@ -864,11 +865,11 @@ function renderHeat() {
     tb.appendChild(tr);
   }
   table.appendChild(tb);
-  document.getElementById("heatmap").replaceChildren(table);
+  document.getElementById(hostId).replaceChildren(table);
 
-  const key = document.getElementById("check-key");
+  const key = document.getElementById(keyId);
   key.replaceChildren();
-  for (const [, short, full] of CHECKS) {
+  for (const [, short, full] of checks) {
     const s = document.createElement("span");
     const i = document.createElement("i");
     i.textContent = short;
@@ -913,7 +914,7 @@ function render() {
   renderScatter();
   renderValue();
   renderTime();
-  renderHeat();
+  renderHeat(CHECKS, "checks", "check-key", "heatmap", "m-");
   renderTable();
 }
 
